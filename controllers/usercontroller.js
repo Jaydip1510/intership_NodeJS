@@ -15,3 +15,25 @@ exports.registerUser = async (req,res) => {
         res.status(500).json({message:"Internal Server Error"});
     }
 }
+
+exports.getAllData = async (req, res) => {
+    const users = await userModel.find();
+    res.json({ users });
+};
+
+exports.deleteAllData = async (req, res) => {
+    const id = req.params.id;
+    const deletedUser = await userModel.findByIdAndDelete(id);
+    res.json({ deletedUser });
+};
+
+exports.updateUserData = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const updatedUser = await userModel.findByIdAndUpdate(id, req.body, { new: true });
+        res.json({ message: "User updated successfully", user: updatedUser });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
