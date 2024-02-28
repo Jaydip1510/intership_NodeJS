@@ -27,13 +27,14 @@ exports.deleteAllData = async (req, res) => {
     res.json({ deletedUser });
 };
 
-exports.updateUserData = async (req, res) => {
+exports.updateUserData = (req, res) => {
     const id = req.params.id;
-    try {
-        const updatedUser = await userModel.findByIdAndUpdate(id, req.body, { new: true });
-        res.json({ message: "User updated successfully", user: updatedUser });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
+    userModel.findByIdAndUpdate(id, req.body, { new: true })
+        .then(updatedUser => {
+            res.json({ message: "User updated successfully", user: updatedUser });
+        })
+        .catch(error => {
+            console.error("Error updating user:", error);
+            res.status(500).json({ message: "Internal Server Error" });
+        });
 };
